@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="" id="reparacion">
+    <h1>Hola mundo.</h1>
+  </div>
+</body>
+<script>
+  class Telefono {
+    constructor(numeroSerie, imei, marca) {
+      this.numeroSerie = numeroSerie;
+      this.imei = imei;
+      this.marca = marca;
+      this.reportado = false;
+      this.diagnostico = '';
+    }
+
+    primeraRevision() {
+      if (!this.reportado) {
+        this.diagnostico = 'Primera reviision realizada corretamente.'
+      } else {
+        console.log('El telofono esta reportado. Nose pudo realizar la revision.')
+      }
+    }
+
+  }
+
+  class Cliente {
+    constructor(nombre, autorizacion, abono) {
+      this.nombre = nombre;
+      this.autorizacion = autorizacion;
+      this.abono = abono
+    }
+  }
+
+  class Tecnico {
+    constructor(nombre, skills) {
+      this.nombre = nombre;
+      this.skills = skills;
+    }
+  }
+
+  class Reparacion {
+    constructor(telefono, cliente, tecnico) {
+      this.telefono = telefono;
+      this.cliente = cliente;
+      this.tecnico = tecnico;
+      this.repuestos = [];
+      this.estado = 'En espera de la autorizacion.'
+    }
+
+    agegrarRepuestos(repuesto) {
+      this.repuestos.push(repuesto)
+      console.log('Se agrego el repuesto: ', repuesto)
+    }
+
+    verEstado() {
+      console.log('Estado del equipo', this.estado)
+    }
+
+  }
+  const listReparaciones = [];
+  const telefono1 = new Telefono('123', '987654321', 'Samsung')
+  const client1 = new Cliente('Erick', true, 0.5)
+  const client2 = new Cliente('Juan', false, 0.5)
+  const tecnico1 = new Tecnico('Johana', ['Samsung'])
+  const telefono2 = new Telefono('321', '786543264', 'Xiaomi')
+  // telefono1.reportado = true
+  // console.log(telefono1)
+
+  const reparacion1 = new Reparacion(telefono1, client1, tecnico1);
+
+  const reparacion2 = new Reparacion(telefono2, client1, tecnico1);
+
+
+  listReparaciones.push(reparacion1);
+  listReparaciones.push(reparacion2);
+
+  reparacion1.verEstado()
+
+  if(client1.autorizacion && client1.abono === 0.5) {
+    reparacion1.estado = 'En reparacion';
+
+    telefono1.primeraRevision();
+
+    reparacion1.agegrarRepuestos('Pantalla nueva')
+
+
+    reparacion1.estado = 'Finalizado'
+    
+    reparacion1.verEstado()
+
+  } else {
+    alert('El usuario debe validar su permiso y abonar el 50%')
+  }
+
+  const storage  = window.localStorage || window.sessionStorage;
+
+  storage.setItem('reparacion', JSON.stringify(listReparaciones));
+
+  const reparacion = JSON.parse(localStorage.getItem('reparacion'))
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const reparacionDiv = document.getElementById('reparacion')
+    
+    if(reparacion.length  === 0) {
+      reparacionDiv.innerHTML = '<p>No hay reparaciones. </p>'
+    } else {
+
+      const ul  = document.createElement('ul')
+
+      // console.log(reparacion)
+      reparacion.forEach((element, index) => {
+        // console.log(index)
+        // console.log(element.telefono)
+        const li = document.createElement('li');
+
+        li.textContent = `Telefono: ${element.telefono.numeroSerie},  Cliente: ${element.cliente.nombre}, Tecnico: ${element.tecnico.nombre}`;
+
+        ul.appendChild(li)
+      });
+
+      reparacionDiv.appendChild(ul)
+    }
+
+  })
+</script>
+
+</html>
